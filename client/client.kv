@@ -1,0 +1,393 @@
+ScreenManagement:
+    StartScreen:
+    ConnectionErrorScreen:
+    LoginScreen:
+    RegistrationScreen:
+    MessagesScreen:
+    ChatScreen:
+
+
+<StartScreen>
+    name: 'start'
+
+    BoxLayout:
+        orientation: 'vertical'
+        size: root.width, root.height
+        spacing: 10
+
+        ActionBar:
+            id: action
+            background_color: 0, 0, 1, 1
+            size_y: root.height * .1
+
+        Widget:
+            size_hint_y: .15
+
+        Image:
+            source: 'img/icon.png'
+            size_hint: .5, .5
+            pos_hint: {'center_x': .5, 'center_y': 1}
+
+        Label:
+            id: hello_text
+            halign: 'center'
+            text: 'Добро пожаловать в PyMessenger!\nЗдесь вы можете безопасно общаться с друзьями и близкими.\nДля начала, вам нужно войти в аккаунт или зарегистрироваться'
+            color: 0, 0, 0, 1
+            size_hint_y: .4
+
+        Button:
+            id: login_button
+            text: 'Вход'
+            size_hint: .4, .1
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            on_release: root.check_socket('login')
+
+        Button:
+            id: registration_button
+            text: 'Регистрация'
+            background_color: 0, 0, 1, 1
+            size_hint: .4, .1
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            on_release: root.check_socket('registration')
+
+
+        Widget:
+            size_hint_y: .1
+
+<ConnectionErrorScreen>
+    name: 'connection_error'
+
+    BoxLayout:
+        orientation: 'vertical'
+        size: root.width, root.height
+        spacing: 10
+
+        ActionBar:
+            id: action
+            background_color: 0, 0, 1, 1
+            size_y: root.height * .1
+
+            ActionView:
+                ActionPrevious:
+                    app_icon: 'img/action_icon.png'
+                    title: 'Ошибка подключения'
+
+        Widget:
+            size_hint_y: .4
+
+        Label:
+            id: hello_text
+            halign: 'center'
+            text: 'Не удалось подключиться к серверу :(\nПроверьте подключение к интернету'
+            color: 0, 0, 0, 1
+            size_hint_y: .4
+
+        Button:
+            id: back_button
+            text: 'Назад'
+            background_color: 0, 0, 1, 1
+            size_hint: .4, .1
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            on_release: app.root.current = 'start'
+
+        Widget:
+            size_hint_y: .4
+
+<LoginScreen>
+    name: 'login'
+
+    login_widget: login
+    password_widget: password
+    error_label_widget: error_label
+
+    BoxLayout:
+        orientation: 'vertical'
+        size: root.width, root.height
+        spacing: 10
+
+        ActionBar:
+            id: action
+            background_color: 0, 0, 1, 1
+            size_y: root.height * .1
+
+            ActionView:
+                ActionPrevious:
+                    app_icon: 'img/action_icon.png'
+                    title: 'Вход'
+                    on_press: app.root.current = 'start'
+
+        Widget:
+            size_hint_y: 0.5
+
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: 10
+            padding: 20
+
+            Label:
+                text: 'Имя пользователя'
+                text_size: self.size
+                halign: 'left'
+                color: 0, 0, 0, 1
+                size_hint: .5, .15
+                pos_hint: {'left': .1, 'center_y': .5}
+
+            TextInput:
+                id: login
+                multiline: False
+                size_hint: .7, .15
+                pos_hint: {'left': .1, 'center_y': .5}
+
+            Label:
+                text: 'Пароль'
+                text_size: self.size
+                halign: 'left'
+                color: 0, 0, 0, 1
+                size_hint: .5, .15
+                pos_hint: {'left': .1, 'center_y': .5}
+
+            TextInput:
+                id: password
+                password: True
+                multiline: False
+                size_hint: .7, .15
+                pos_hint: {'left': .1, 'center_y': .5}
+
+            Label:
+                id: error_label
+                text: ''
+                text_size: self.size
+                halign: 'left'
+                color: 1, 0, 0, 1
+                size_hint: .5, .15
+                pos_hint: {'left': .1, 'center_y': .5}
+
+        Widget:
+            size_hint_y: 0.5
+
+        BoxLayout:
+            orientation: 'horizontal'
+
+            Button:
+                id: next
+                text: 'Назад'
+                color: 0, 0, 0, 1
+                background_color: 0, 0, 0, 0
+                size_hint: .2, .1
+                on_press: app.root.current = 'start'
+
+            Button:
+                id: next
+                text: 'Далее'
+                color: 0, 0, .5, 1
+                background_color: 0, 0, 0, 0
+                size_hint: .2, .1
+                on_press: root.send_user_data()
+
+<RegistrationScreen>
+    name: 'registration'
+    login_widget: login
+    password1_widget: password1
+    password2_widget: password2
+    error_label_widget: error_label
+
+    BoxLayout:
+        orientation: 'vertical'
+        size: root.width, root.height
+        spacing: 10
+
+        ActionBar:
+            id: action
+            background_color: 0, 0, 1, 1
+            size_y: root.height * .1
+
+            ActionView:
+                ActionPrevious:
+                    app_icon: 'img/action_icon.png'
+                    title: 'Регистрация'
+                    on_release: app.root.current = 'start'
+
+        Widget:
+            size_hint_y: .4
+
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: 10
+            padding: 20
+
+            Label:
+                text: 'Придумайте имя пользователя'
+                text_size: self.size
+                halign: 'left'
+                color: 0, 0, 0, 1
+                size_hint_x: .7
+                pos_hint: {'left': .1, 'center_y': .5}
+
+            TextInput:
+                id: login
+                multiline: False
+                size_hint_x: .7
+                pos_hint: {'left': .1, 'center_y': .5}
+
+            Label:
+                text: 'Введите пароль'
+                text_size: self.size
+                halign: 'left'
+                color: 0, 0, 0, 1
+                size_hint_x: .5
+                pos_hint: {'left': .1, 'center_y': .5}
+
+            TextInput:
+                id: password1
+                password: True
+                multiline: False
+                size_hint_x: .7
+                pos_hint: {'left': .1, 'center_y': .5}
+
+            Label:
+                text: 'Повторите пароль'
+                text_size: self.size
+                halign: 'left'
+                color: 0, 0, 0, 1
+                size_hint_x: .5
+                pos_hint: {'left': .1, 'center_y': .5}
+
+            TextInput:
+                id: password2
+                password: True
+                multiline: False
+                size_hint_x: .7
+                pos_hint: {'left': .1, 'center_y': .5}
+
+            Label:
+                id: error_label
+                text: ''
+                text_size: self.size
+                halign: 'left'
+                valign: 'top'
+                color: 1, 0, 0, 1
+                size_hint_x: .9
+                pos_hint: {'left': .1, 'center_y': .5}
+
+
+        BoxLayout:
+            orientation: 'horizontal'
+
+            Button:
+                id: next
+                text: 'Назад'
+                color: 0, 0, 0, 1
+                background_color: 0, 0, 0, 0
+                size_hint: .2, .1
+                on_press: app.root.current = 'start'
+
+            Button:
+                id: next
+                text: 'Далее'
+                color: 0, 0, .5, 1
+                background_color: 0, 0, 0, 0
+                size_hint: .2, .1
+                on_press: root.send_user_data()
+
+<MessagesScreen>
+    name: 'messages'
+    layout_widget: layout
+    search_widget: search
+
+    BoxLayout:
+        orientation: 'vertical'
+        size: root.width, root.height
+        spacing: 10
+
+
+        ActionBar:
+            id: action
+            background_color: 0, 0, 1, 1
+            size_y: root.height * .1
+
+
+        GridLayout:
+            cols: 2
+            size_hint_y: .075
+            spacing: 5
+            padding: 5
+
+            TextInput:
+                id: search
+                size_hint_x: .7
+                font_size: 25
+                text_size: self.size
+                valign: 'center'
+
+            Button:
+                size_hint_x: .3
+                background_color: 0, 0, 1, 1
+                text: 'Поиск'
+                on_press: root.search_users()
+
+        ScrollView:
+            do_scroll_y: True
+            do_scroll_x: False
+
+            GridLayout:
+                id: layout
+                cols: 1
+                size: (root.width, root.height)
+                size_hint_y: None
+                size_hint_x: None
+                height: self.minimum_height
+                row_default_height: 75
+                row_force_default: True
+                spacing: 10
+                padding: 20
+
+<ChatScreen>
+    name: 'chat'
+    chat_widget: chat
+    chat_input_widget: chat_input
+    action_text_widget: action_text
+
+    FloatLayout:
+        ActionBar:
+            id: action
+            background_color: 0, 0, 1, 1
+            size_hint_y: 0.1
+            pos_hint: {'center_x': .5, 'top': 1}
+
+            ActionView:
+                ActionPrevious:
+                    id: action_text
+                    app_icon: 'img/action_icon.png'
+                    title: ''
+                    on_press: root.back()
+
+        TextInput:
+            id: chat
+            size: (root.width, root.height)
+            size_hint_y: None
+            size_hint_x: None
+            multiline: True
+            readonly: True
+            font_size: 25
+            size_hint_y: None
+            text_size: self.size
+            valign: 'bottom'
+            size_hint_y: 0.8
+            pos_hint: {'center_x': .5, 'top': .9}
+            scroll_y: 10
+
+
+        TextInput:
+            id: chat_input
+            multiline: True
+            font_size: 25
+            size_hint: .8, .1
+            pos_hint: {'left': 1, 'top': .1}
+
+        Button:
+            id: send_button
+            text: 'Отпр.'
+            background_color: 0, 0, 1, 1
+            size_hint: .2, .1
+            pos_hint: {'right': 1, 'top': .1}
+            on_press: root.send_message()
