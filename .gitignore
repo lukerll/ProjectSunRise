@@ -1,1 +1,6 @@
 .idea
+privkey.txt
+pubkey.txt
+messages.json
+*.db
+__pycache__
